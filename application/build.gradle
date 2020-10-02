@@ -1,0 +1,52 @@
+plugins {
+    id "groovy"
+    id "com.microsoft.azure.azurefunctions" version "1.4.0"
+    id "io.micronaut.application" version '1.0.3'
+}
+
+version "0.1"
+group "com.example"
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+micronaut {
+    runtime "azure_function"
+    testRuntime "spock2"
+    processing {
+        incremental false
+        annotations "com.example.*"
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("io.micronaut:micronaut-http-client")
+    implementation "io.micronaut.azure:micronaut-azure-function-http:2.0.2"
+    implementation "io.micronaut.azure:micronaut-azure-function:2.0.2"
+
+    testImplementation("io.micronaut.azure:micronaut-azure-function-http-test:2.0.2")
+}
+
+mainClassName = "com.example.Application"
+
+java {
+    sourceCompatibility = JavaVersion.toVersion('1.8')
+    targetCompatibility = JavaVersion.toVersion('1.8')
+}
+
+
+azurefunctions {
+    resourceGroup = 'linuxexamplemicronaut'
+    appName = 'micronautest'
+    pricingTier = 'Consumption'
+    region = 'westus'
+    runtime {
+      os = 'linux'
+    }
+    localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
+}
